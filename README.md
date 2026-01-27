@@ -1,1 +1,1 @@
-# MobileNet-V3-classification
+# A disasters classification project using **MobileNet V3**
