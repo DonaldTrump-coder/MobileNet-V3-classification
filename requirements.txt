@@ -1,2 +1,4 @@
 imageio
 imageio[ffmpeg]
+pyyaml
+tqdm
