@@ -134,7 +134,6 @@ def main():
             correct += (predicted == labels).sum().item()
     logging.info(f'Test Accuracy: {100 * correct / total:.2f}%')
 
-    tensor_board_process.terminate()
     torch.save(model.state_dict(), os.path.join(output_dir, 'model.pth'))
     logging.info('Model saved to ' + os.path.join(output_dir, 'model.pth'))
 
