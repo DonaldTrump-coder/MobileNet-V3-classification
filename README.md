@@ -32,7 +32,7 @@ We use a disaster classification images dataset: [DisasterClassification](https:
 ### Model
 We use MobileNet V3 model, including MobileNet V3-Small and MobileNet V3-Large. The structure of both is shown below:<br>
 | ![Small_Structure](res/small_structure.PNG) | ![Large_Structure](res/large_structure.PNG) |
-| --------------------- | --------------------- |
+|:-------:|:-------:|
 | MobileNet V3-Small    | MobileNet V3-Large    |
 
 ### Results
