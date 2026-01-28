@@ -39,16 +39,16 @@ We use MobileNet V3 model, including MobileNet V3-Small and MobileNet V3-Large. 
 We use batch_size of 32 for MobileNet V3-Small and 16 for MobileNet V3-Large. We use NAdam optimizer with a learning rate of 0.001 for both models. We also use train proportion of 80 and epoch_num of 50.
 
 ### Results
-**MobilenetV3_small:**:
-Test Accuracy: **99.76%**
+**MobilenetV3_small:**<br>
+Test Accuracy: **99.76%**<br>
 charts:
 
 | training accuracy | training_loss | epoch_loss |
 |:-------:|:-------:|:-------:|
 | ![training_accuracy](res/training_accuracy_small.PNG) | ![training_loss](res/training_loss_small.PNG) | ![epoch_loss](res/epoch_loss_small.PNG) |
 
-**MobilenetV3_large:**:
-Test Accuracy: **99.51%**
+**MobilenetV3_large:**<br>
+Test Accuracy: **99.51%**<br>
 charts:
 
 | training accuracy | training_loss | epoch_loss |
