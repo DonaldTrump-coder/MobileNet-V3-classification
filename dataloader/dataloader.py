@@ -34,3 +34,6 @@ class classification_dataset(Dataset):
             image = self.transform(image)
 
         return image, label
+    
+    def get_num_classes(self):
+        return len(self.classes)

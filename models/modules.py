@@ -10,6 +10,7 @@ class ChannelwiseSeparableConv(nn.Module):
                  nolinear: nn.Module, # non-linear activation function (HSigmoid or HSwish)
                  stride: int = 1,
                  bias: bool = False):
+        super(ChannelwiseSeparableConv, self).__init__()
 
         self.conv1 = nn.Conv2d(in_channels, expand_channels, kernel_size=1, stride=1, padding=0, bias=bias)
         self.bn1 = nn.BatchNorm2d(expand_channels)

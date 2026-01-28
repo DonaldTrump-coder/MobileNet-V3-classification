@@ -2,3 +2,5 @@ imageio
 imageio[ffmpeg]
 pyyaml
 tqdm
+pillow
+scikit-learn

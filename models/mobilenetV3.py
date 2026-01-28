@@ -62,3 +62,41 @@ class small_MobileNetV3(nn.Module):
         x = self.model(x)
         x = torch.flatten(x, 1)
         x = self.output_head(x)
+        return x
+    
+class large_MobileNetV3(nn.Module):
+    def __init__(self, num_classes: int = 1000):
+        super(large_MobileNetV3, self).__init__()
+        self.model = nn.Sequential(
+            nn.Conv2d(3, 16, kernel_size=3, stride=2, padding=1, bias=False), # 224x224x3 -> 112x112x16
+            nn.BatchNorm2d(16),
+            HSwish(),
+            MobileNetV3Block(16, 16, 16, kernel_size=3, nolinear=nn.ReLU(inplace=True), stride=1, bias=False, se=False), # 112x112x16 -> 112x112x16
+            MobileNetV3Block(16, 64, 24, kernel_size=3, nolinear=nn.ReLU(inplace=True), stride=2, bias=False, se=False), # 112x112x16 -> 56x56x24
+            MobileNetV3Block(24, 72, 24, kernel_size=3, nolinear=nn.ReLU(inplace=True), stride=1, bias=False, se=False), # 56x56x24 -> 56x56x24
+            MobileNetV3Block(24, 72, 40, kernel_size=5, nolinear=nn.ReLU(inplace=True), stride=2, bias=False, se=True), # 56x56x24 -> 28x28x40
+            MobileNetV3Block(40, 120, 40, kernel_size=5, nolinear=nn.ReLU(inplace=True), stride=1, bias=False, se=True), # 28x28x40 -> 28x28x40
+            MobileNetV3Block(40, 120, 40, kernel_size=5, nolinear=nn.ReLU(inplace=True), stride=1, bias=False, se=True), # 28x28x40 -> 28x28x40
+            MobileNetV3Block(40, 240, 80, kernel_size=3, nolinear=HSwish(), stride=2, bias=False, se=False), # 28x28x40 -> 14x14x80
+            MobileNetV3Block(80, 200, 80, kernel_size=3, nolinear=HSwish(), stride=1, bias=False, se=False), # 14x14x80 -> 14x14x80
+            MobileNetV3Block(80, 184, 80, kernel_size=3, nolinear=HSwish(), stride=1, bias=False, se=False), # 14x14x80 -> 14x14x80
+            MobileNetV3Block(80, 184, 80, kernel_size=3, nolinear=HSwish(), stride=1, bias=False, se=False), # 14x14x80 -> 14x14x80
+            MobileNetV3Block(80, 480, 112, kernel_size=3, nolinear=HSwish(), stride=1, bias=False, se=True), # 14x14x80 -> 14x14x112
+            MobileNetV3Block(112, 672, 112, kernel_size=3, nolinear=HSwish(), stride=1, bias=False, se=True), # 14x14x112 -> 14x14x112
+            MobileNetV3Block(112, 672, 160, kernel_size=5, nolinear=HSwish(), stride=2, bias=False, se=True), # 14x14x112 -> 7x7x160
+            MobileNetV3Block(160, 960, 160, kernel_size=5, nolinear=HSwish(), stride=1, bias=False, se=True), # 7x7x160 -> 7x7x160
+            MobileNetV3Block(160, 960, 160, kernel_size=5, nolinear=HSwish(), stride=1, bias=False, se=True), # 7x7x160 -> 7x7x160
+            nn.Conv2d(160, 960, kernel_size=1, stride=1, padding=0, bias=False), # 7x7x160 -> 7x7x960
+            nn.BatchNorm2d(960),
+            HSwish(),
+            nn.AdaptiveAvgPool2d(1), # 7x7x960 -> 1x1x960
+            nn.Conv2d(960, 1024, kernel_size=1, stride=1, padding=0, bias=False), # 1x1x960 -> 1x1x1024
+            HSwish()
+        )
+        self.output_head = nn.Linear(1024, num_classes)
+
+    def forward(self, x):
+        x = self.model(x)
+        x = torch.flatten(x, 1)
+        x = self.output_head(x)
+        return x
