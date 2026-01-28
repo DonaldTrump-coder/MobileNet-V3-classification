@@ -1,1 +1,9 @@
-folder: ./data/
+data:
+  folder: ./data/
+  batch_size: 2
+  train_size: 0.8
+  resize:
+    height: 512
+    width: 512
+model: MobileNetV3_small
+epochs: 100
