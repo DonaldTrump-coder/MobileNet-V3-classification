@@ -11,6 +11,9 @@ import torch
 import logging
 import os
 from tqdm import tqdm
+import shutil
+from torch.utils.tensorboard import SummaryWriter
+import subprocess
 
 log_file = 'model_info.log'
 
@@ -24,6 +27,7 @@ logging.basicConfig(
 )
 
 def main():
+    os.makedirs('output', exist_ok=True)
     if os.path.exists(log_file):
         open(log_file, 'w').close()
     parser = argparse.ArgumentParser(description='Load configuration file')
@@ -58,7 +62,19 @@ def main():
         model = small_MobileNetV3(num_classes=dataset.get_num_classes())
     elif config['model'] == 'MobileNetV3_large':
         model = large_MobileNetV3(num_classes=dataset.get_num_classes())
+    else:
+        raise ValueError('Unsupported model type: ' + config['model'])
     logging.info('Using Model: ' + config['model'])
+
+    if os.path.exists(os.path.join('output', config['model'])):
+        if os.path.isdir(os.path.join('output', config['model'])):
+            shutil.rmtree(os.path.join('output', config['model']))
+        else:
+            os.remove(os.path.join('output', config['model']))
+    os.makedirs(os.path.join('output', config['model']), exist_ok=True)
+    output_dir = os.path.join('output', config['model'])
+    tensor_board_writer = SummaryWriter(log_dir=output_dir)
+    tensor_board_process = subprocess.Popen(['tensorboard', f'--logdir={output_dir}'])
 
     total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
     logging.info(f'Total trainable parameters: {total_params}')
@@ -88,12 +104,18 @@ def main():
                 _, predicted = torch.max(outputs, 1)
                 total += labels.size(0)
                 correct += (predicted == labels).sum().item()
+
+                tensor_board_writer.add_scalar('Training Loss', loss.item(), epoch * len(train_loader) + i)
+                tensor_board_writer.add_scalar('Training Accuracy', 100 * correct / total, epoch * len(train_loader) + i)
             
                 pbar.set_postfix({'loss': training_loss / (i + 1), 'accuracy': 100 * correct / total})
                 pbar.update(1)
         
+        tensor_board_writer.add_scalar('Training epoch Loss', training_loss/len(train_loader), epoch)
+
         logging.info(f'Epoch [{epoch+1}/{num_epochs}], Loss: {training_loss/len(train_loader):.4f}, Accuracy: {100 * correct / total:.2f}%')
 
+    tensor_board_writer.close()
     logging.info('Training complete.')
 
     # inference
@@ -111,6 +133,8 @@ def main():
             total += labels.size(0)
             correct += (predicted == labels).sum().item()
     logging.info(f'Test Accuracy: {100 * correct / total:.2f}%')
+
+    tensor_board_process.terminate()
 
 if __name__ == '__main__':
     main()

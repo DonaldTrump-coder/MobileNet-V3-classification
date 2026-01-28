@@ -1,6 +1,6 @@
 data:
   folder: ./data/
-  batch_size: 216
+  batch_size: 256
   train_size: 0.8
   resize:
     height: 640
