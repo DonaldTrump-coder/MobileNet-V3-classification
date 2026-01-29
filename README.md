@@ -4,6 +4,7 @@ We conduct a classification for images of disasters taken by drones, using [Mobi
 [College Students' Innovation training Project of Hunan Province: Research on Multi-Modal Embodied Intelligent Agents for Emergency Rescue with Drones](https://sczx.hnu.edu.cn/info/1053/3722.htm)<br><br>
 **Conductor:**<br>
 [Haojun Tang](https://donaldtrump-coder.github.io/), [Yuyang Wu](https://github.com/neil666-com), [Jiahao Zhou](https://github.com/Jeiluo), [Zhiming Zhang](https://github.com/ZZM-LAB), Haipeng Tao<br>
+[Central South University](https://www.csu.edu.cn/)<br>
 
 ### Paper of MobileNet V3:
 [Searching for MobileNetV3](https://arxiv.org/abs/1905.02244)
